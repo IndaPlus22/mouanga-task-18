@@ -53,15 +53,24 @@ fn main() {
 fn search_through(string: &str, part: &str) -> Vec<usize> {
     let mut indices = Vec::new();
     let mut start = 0;
+    let str_length = string.len();
 
     // keep .find()-ing the pattern until there is nothing more to .find()
     while let Some(index) = string[start..].find(part) {
         let cur_index = start + index;
         indices.push(cur_index);
-        start = cur_index + part.len();
+        start = cur_index + 1;
     }
 
     return indices;
+}
+
+// get the minimum of two
+fn min(a: usize, b: usize) -> usize {
+    if a < b {
+        return a;
+    }
+    b
 }
 
 // print all elements of a usize vector
