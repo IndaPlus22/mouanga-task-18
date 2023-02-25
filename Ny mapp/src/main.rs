@@ -24,8 +24,7 @@ fn main() {
             // we check if the test case has ended, we are expecting an integer then
             if time_next_case == 0 {
                 for word in &words_to_test {
-                    // print_vec(&search_through(&(big_string).as_bytes(), (word).as_bytes()))
-                    print_vec(&find_all_indices(&big_string, word))
+                     print_vec(&search_through(&(big_string).as_bytes(), (word).as_bytes()))
                 }
                 time_next_case = 1 + next_line.parse::<i32>().unwrap();
                 words_to_test = vec![];
@@ -38,8 +37,7 @@ fn main() {
 
         } else {
             for word in &words_to_test {
-                // print_vec(&search_through(&(big_string).as_bytes(), (word).as_bytes()))
-                print_vec(&find_all_indices(&big_string, word))
+                 print_vec(&search_through(&(big_string).as_bytes(), (word).as_bytes()))
             }
             break;
         }
@@ -63,14 +61,6 @@ fn search_through(string: &[u8], part: &[u8]) -> Vec<usize> {
     }
 
     return indices;
-}
-
-// get the minimum of two
-fn min(a: usize, b: usize) -> usize {
-    if a < b {
-        return a;
-    }
-    b
 }
 
 // print all elements of a usize vector
@@ -101,57 +91,4 @@ fn part_exists(string: &[u8], part: &[u8]) -> bool {
     
 
     return true;
-}
-
-fn boyer_moore_search(haystack: &[u8], needle: &[u8]) -> Vec<usize> {
-    let n = haystack.len();
-    let m = needle.len();
-    let mut indices = vec![];
-    let mut i = m - 1;
-    let mut j = m - 1;
-
-    let mut bad_char_table = [m; 256];
-    for (k, &c) in needle.iter().enumerate().take(m - 1) {
-        bad_char_table[c as usize] = m - k - 1;
-    }
-
-    let mut suffixes = vec![0; m];
-    suffixes[m - 1] = m;
-    let mut f = m - 1;
-    for g in (0..m - 1).rev() {
-        if g > f && suffixes[g + m - 1 - f] < g - f {
-            suffixes[g] = suffixes[g + m - 1 - f];
-        } else {
-            if g < f {
-                f = g;
-            }
-            while f >= 0 && needle[f] == needle[f + m - 1 - g] {
-                f -= 1;
-            }
-            suffixes[g] = f + 1;
-        }
-    }
-
-    while i < n {
-        let hc = haystack[i];
-        if hc == needle[j] {
-            if j == 0 {
-                indices.push(i);
-                i += m;
-                j = m - 1;
-            } else {
-                i -= 1;
-                j -= 1;
-            }
-        } else {
-            i += std::cmp::max(j as isize - bad_char_table[hc as usize] as isize, suffixes[j].try_into().unwrap()) as usize;
-            j = m - 1;
-        }
-    }
-
-    indices
-}
-
-fn find_all_indices(haystack: &str, needle: &str) -> Vec<usize> {
-    boyer_moore_search(haystack.as_bytes(), needle.as_bytes())
 }
