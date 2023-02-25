@@ -1,6 +1,4 @@
 use std::io;
-const ONE: i32 = 1;
-const ZERO: i32 = 0;
 fn main(){
     loop {
         let input = get_input();
